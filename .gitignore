@@ -1,0 +1,5 @@
+node_modules/
+out/
+*.vsix
+# Personal workspace settings (workspace ID, local repo path, theme colors)
+*.code-workspace

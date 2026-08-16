@@ -1,0 +1,157 @@
+{
+  "name": "zh-issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickcoyne/zh-issues.git"
+  },
+  "displayName": "Issues for Zenhub (Unofficial)",
+  "description": "Unofficial. Browse and manage Zenhub pipeline issues from the VS Code sidebar, powered by the zh CLI. Not affiliated with, endorsed by, or sponsored by Zenhub Inc.",
+  "version": "0.1.0",
+  "publisher": "codevader",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zhIssues",
+          "title": "Issues for Zenhub",
+          "icon": "media/activity-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "zhIssues": [
+        {
+          "type": "webview",
+          "id": "zhIssues.pipeline",
+          "name": "Pipeline"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "zhIssues.refresh",
+        "category": "Issues for Zenhub",
+        "title": "Refresh Issues",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "zhIssues.openSettings",
+        "category": "Issues for Zenhub",
+        "title": "Open Settings",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "zhIssues.detectWorkspace",
+        "category": "Issues for Zenhub",
+        "title": "Detect Workspace from Repository"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "zhIssues.refresh",
+          "when": "view == zhIssues.pipeline",
+          "group": "navigation@1"
+        },
+        {
+          "command": "zhIssues.openSettings",
+          "when": "view == zhIssues.pipeline",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Issues for Zenhub",
+      "properties": {
+        "zhIssues.workspaceId": {
+          "type": "string",
+          "default": "",
+          "description": "Zenhub workspace ID for the board to display. Find it in your board URL (app.zenhub.com/workspaces/<name>-<id>/board) or run \"Issues for Zenhub: Detect Workspace from Repository\"."
+        },
+        "zhIssues.localRepoPath": {
+          "type": "string",
+          "default": "",
+          "description": "Local filesystem path to a checkout of the GitHub repository connected to your Zenhub workspace (e.g. /Users/you/Projects/my-repo). The zh CLI runs in this directory to resolve issue numbers. Defaults to the first VS Code workspace folder."
+        },
+        "zhIssues.cliPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the zh CLI binary. Leave empty to use zh from PATH (falls back to ~/.zenhub-cli/zh)."
+        },
+        "zhIssues.repoFilter": {
+          "type": "string",
+          "default": "",
+          "description": "Only show issues from this repository, as \"owner/name\" or just \"name\" (e.g. \"acme/my-repo\" or \"my-repo\"). Leave empty to show issues from every repository in the workspace."
+        },
+        "zhIssues.hiddenIssueOptions": {
+          "type": "array",
+          "default": [],
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "pinTop",
+              "clearPriority",
+              "sendTop",
+              "sendBottom",
+              "move",
+              "duplicate",
+              "close",
+              "reopen",
+              "assign",
+              "estimate",
+              "setLabel",
+              "setSprint",
+              "comment",
+              "openGithub",
+              "openZenhub"
+            ],
+            "enumDescriptions": [
+              "Pin to top and set as high priority",
+              "Clear priority",
+              "Send to top",
+              "Send to bottom",
+              "Move to pipeline…",
+              "Duplicate issue",
+              "Close issue",
+              "Reopen issue",
+              "Set assignee…",
+              "Set estimate…",
+              "Set label",
+              "Set sprint",
+              "Add comment…",
+              "Open in GitHub",
+              "Open in Zenhub"
+            ]
+          },
+          "description": "Entries to hide from the per-issue \"Issue options\" menu. Empty shows every option."
+        },
+        "zhIssues.defaultPipeline": {
+          "type": "string",
+          "default": "Backlog",
+          "description": "Pipeline selected when the board first loads. Falls back to the first pipeline if not found."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "test": "tsc -p ./ && node --test out/test/*.test.js",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
